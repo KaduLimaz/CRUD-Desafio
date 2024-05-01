@@ -19,6 +19,9 @@ export class CreateCustomerService {
 			},
 		});
 
-		return customer;
+		return {
+			customer,
+			message: "Criado com sucesso",
+		};
 	}
 }
