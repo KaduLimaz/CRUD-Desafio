@@ -1,7 +1,8 @@
 import { FiTrash, FiEdit } from "react-icons/fi";
 import { useEffect, useState, useRef, FormEvent } from "react";
 import { api } from "./services/api";
-import { Modal } from "./Components/Modal";
+import Modal from "./Components/Modal";
+
 
 interface CustomerProps {
 	id: string;

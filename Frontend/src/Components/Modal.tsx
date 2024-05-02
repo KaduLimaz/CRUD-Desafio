@@ -1,5 +1,5 @@
 import { useState } from "react";
-import App  from "./"
+
 export default function Modal() {
 	const [showModal, setShowModal] = useState(false);
 	return (
