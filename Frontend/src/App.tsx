@@ -1,4 +1,4 @@
-import { FiTrash } from "react-icons/fi";
+import { FiTrash, FiEdit } from "react-icons/fi";
 import { useEffect, useState, useRef, FormEvent } from "react";
 import { api } from "./services/api";
 
@@ -9,7 +9,7 @@ interface CustomerProps {
 	status: boolean;
 	created_at: string;
 }
-export function App() {
+export default function App() {
 	const [customers, setCustomers] = useState<CustomerProps[]>([]);
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const taskRef = useRef<HTMLTextAreaElement | null>(null);
@@ -33,22 +33,47 @@ export function App() {
 			task: taskRef.current?.value,
 		});
 
-		setCustomers((allCustomers) => [...allCustomers, response.data]);
-
-		nameRef.current.value = "";
-		taskRef.current.value = "";
+		setCustomers((currentValue) => [...currentValue, response.data.customer]);
+		nameRef.current?.value;
 	}
 
 	async function handleDelete(id: string) {
-		api.delete("/customer", {
+		await api.delete("/customer", {
 			params: {
 				id: id,
 			},
 		});
+
 		const allCustomers = customers.filter((customer) => {
-			customer.id !== id;
+			return customer.id !== id;
 		});
+
 		setCustomers(allCustomers);
+	}
+
+	async function handleEdit(id: string, newTask: string) {
+		try {
+			const response = await api.put(`/customer/${id}`, {
+				task: newTask,
+			});
+
+			// Atualiza a lista de clientes após a edição bem-sucedida
+			const updatedCustomers = customers.map((customer) => {
+				if (customer.id === id) {
+					return {
+						...customer,
+						task: newTask,
+					};
+				} else {
+					return customer;
+				}
+			});
+
+			setCustomers(updatedCustomers);
+		} catch (error) {
+			console.error("Erro ao editar a tarefa do cliente:", error);
+			// Lidar com o erro, se necessário
+		}
 	}
 
 	return (
@@ -96,12 +121,20 @@ export function App() {
 									<span className="font-medium">Status:</span>
 									{customer.status ? "Ativo" : " Inativo"}
 								</p>
-								<button
-									className="bg-red-500 w-6 h-6 flex items-center justify-center rounded"
-									onClick={() => handleDelete(customer.id)}
-								>
-									<FiTrash size={18} color="#fff" />
-								</button>
+								<div className="flex gap-2">
+									<button
+										className="bg-red-500 w-6 h-6 flex items-center justify-center rounded"
+										onClick={() => handleDelete(customer.id)}
+									>
+										<FiTrash size={18} color="#fff" />
+									</button>
+									<button
+										className="bg-orange-300 w-6 h-6 flex items-center justify-center rounded"
+										onClick={() => handleEdit(customer.id, customer.task)}
+									>
+										<FiEdit size={18} color="#fff" />
+									</button>
+								</div>
 							</article>
 						))}
 					</section>
