@@ -11,15 +11,35 @@ interface CustomerProps {
 }
 export default function App() {
 	const [customers, setCustomers] = useState<CustomerProps[]>([]);
+	const [csrfToken, setCsrfToken] = useState<string>();
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const taskRef = useRef<HTMLTextAreaElement | null>(null);
 
 	useEffect(() => {
-		loadCustomers();
+		console.log("chamou");
+
+		if (!csrfToken) getToken();
 	}, []);
 
+	useEffect(() => {
+		if (csrfToken) {
+			loadCustomers();
+		}
+	}, [csrfToken]);
+
+	async function getToken() {
+		const response = await api.get("/token", { withCredentials: true });
+
+		console.log(response);
+
+		setCsrfToken(response.data.token);
+	}
+
 	async function loadCustomers() {
-		const response = await api.get("/list");
+		const response = await api.get("/list", {
+			headers: { "csrf-token": csrfToken },
+			withCredentials: true,
+		});
 		setCustomers(response.data);
 	}
 
@@ -28,10 +48,17 @@ export default function App() {
 
 		if (!nameRef.current?.value || !taskRef.current?.value) return;
 
-		const response = await api.post("/customer", {
-			name: nameRef.current?.value,
-			task: taskRef.current?.value,
-		});
+		const response = await api.post(
+			"/customer",
+			{
+				name: nameRef.current?.value,
+				task: taskRef.current?.value,
+			},
+			{
+				headers: { "csrf-token": csrfToken },
+				withCredentials: true,
+			}
+		);
 
 		setCustomers((currentValue) => [...currentValue, response.data.customer]);
 		nameRef.current?.value;
@@ -42,6 +69,8 @@ export default function App() {
 			params: {
 				id: id,
 			},
+			headers: { "csrf-token": csrfToken },
+			withCredentials: true,
 		});
 
 		const allCustomers = customers.filter((customer) => {
@@ -52,10 +81,14 @@ export default function App() {
 	}
 
 	async function handleEdit() {
-		const response = await api.put("/customer/", {
-			name: nameRef.current?.value,
-			task: taskRef.current?.value,
-		});
+		const response = await api.put(
+			"/customer/",
+			{
+				name: nameRef.current?.value,
+				task: taskRef.current?.value,
+			},
+			{ headers: { "csrf-token": csrfToken }, withCredentials: true }
+		);
 
 		setCustomers((currentValue) => [...currentValue, response.data.customer]);
 		nameRef.current?.value;
@@ -65,7 +98,9 @@ export default function App() {
 		<>
 			<div className="w-full min-h-screen bg-blue-600 flex justify-center px-4">
 				<main className=" my-10 w-full md:max-w-2xl">
-					<h1 className="text-4xl">Clientes</h1>
+					<div className="flex justify-center  text-white">
+						<h1 className="text-4xl ">Tarefa</h1>
+					</div>
 
 					<form className="flex flex-col my-6" onSubmit={handleSumibit}>
 						<label className="font-medium text-white">Nome:</label>
