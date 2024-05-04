@@ -1,8 +1,6 @@
 import { FiTrash, FiEdit } from "react-icons/fi";
 import { useEffect, useState, useRef, FormEvent } from "react";
 import { api } from "./services/api";
-import Modal from "./Components/Modal";
-
 
 interface CustomerProps {
 	id: string;
@@ -53,29 +51,14 @@ export default function App() {
 		setCustomers(allCustomers);
 	}
 
-	async function handleEdit(id: string, newTask: string) {
-		try {
-			const response = await api.put(`/customer/${id}`, {
-				task: newTask,
-			});
+	async function handleEdit() {
+		const response = await api.put("/customer/", {
+			name: nameRef.current?.value,
+			task: taskRef.current?.value,
+		});
 
-			// Atualiza a lista de clientes após a edição bem-sucedida
-			const updatedCustomers = customers.map((customer) => {
-				if (customer.id === id) {
-					return {
-						...customer,
-						task: newTask,
-					};
-				} else {
-					return customer;
-				}
-			});
-
-			setCustomers(updatedCustomers);
-		} catch (error) {
-			console.error("Erro ao editar a tarefa do cliente:", error);
-			// Lidar com o erro, se necessário
-		}
+		setCustomers((currentValue) => [...currentValue, response.data.customer]);
+		nameRef.current?.value;
 	}
 
 	return (
@@ -102,7 +85,7 @@ export default function App() {
 						<input
 							type="submit"
 							value="Cadastrar"
-							className="cursor-pointer w-full p-2 bg-blue-800 rounded-lg font-medium"
+							className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
 						/>
 					</form>
 
@@ -125,14 +108,16 @@ export default function App() {
 								</p>
 								<div className="flex gap-2">
 									<button
-										className="bg-red-500 w-6 h-6 flex items-center justify-center rounded"
+										className="bg-red-500 w-6 h-6 flex items-center justify-center rounded "
 										onClick={() => handleDelete(customer.id)}
 									>
 										<FiTrash size={18} color="#fff" />
 									</button>
 									<button
 										className="bg-orange-300 w-6 h-6 flex items-center justify-center rounded"
-										onClick={() => handleEdit(customer.id, customer.task)}
+										onClick={() => {
+											handleEdit();
+										}}
 									>
 										<FiEdit size={18} color="#fff" />
 									</button>
@@ -140,8 +125,6 @@ export default function App() {
 							</article>
 						))}
 					</section>
-
-					<Modal />
 				</main>
 			</div>
 		</>
