@@ -3,24 +3,17 @@ import { api } from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface TaskProps {
-	id?: string;
-	title?: string;
-	description?: string;
-	status?: boolean;
-	created_at?: string;
-	update_at?: Date;
+	name: string;
+	task: string;
 }
+
 export default function FormCadastro() {
-	const [model, setModel] = useState<TaskProps[]>([]);
+	const [model, setModel] = useState<TaskProps>({ name: "", task: "" });
 	const [csrfToken, setCsrfToken] = useState<string>();
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const taskRef = useRef<HTMLTextAreaElement | null>(null);
 	const navigate = useNavigate();
-	const { id } = useParams();
-
-	useEffect(() => {
-		console.log(id);
-	}, [id]);
+	const { id } = useParams() as { id: string };
 
 	function updateModel(
 		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,6 +35,12 @@ export default function FormCadastro() {
 		}
 	}, [csrfToken]);
 
+	useEffect(() => {
+		if (id !== undefined) {
+			findTask(id);
+		}
+	}, [id, csrfToken]);
+
 	//pega o token
 	async function getToken() {
 		const response = await api.get("/token", { withCredentials: true });
@@ -57,30 +56,53 @@ export default function FormCadastro() {
 			withCredentials: true,
 		});
 		setModel(response.data);
-		console.log(response.data);
 	}
 
 	async function handleSumibit(event: FormEvent) {
 		event.preventDefault();
+		if (id !== undefined) {
+			const response = await api.put(
+				`/customer/${id}`,
+				model,
 
-		if (!nameRef.current?.value || !taskRef.current?.value) return;
+				{
+					headers: { "csrf-token": csrfToken },
+					withCredentials: true,
+				}
+			);
 
-		const response = await api.post(
-			"/customer",
-			{
-				name: nameRef.current?.value,
-				task: taskRef.current?.value,
-			},
-			{
-				headers: { "csrf-token": csrfToken },
-				withCredentials: true,
-			}
-		);
-		console.log(response);
-		nameRef.current?.value;
+			window.alert("Tarefa atualizada com sucesso");
+		} else {
+			const response = await api.post(
+				"/customer",
+				{
+					name: nameRef.current?.value,
+					task: taskRef.current?.value,
+				},
+				{
+					headers: { "csrf-token": csrfToken },
+					withCredentials: true,
+				}
+			);
+			window.alert("Tarefa criada com sucesso");
+		}
+
+		backPage();
 	}
 
-	
+	async function findTask(id: string) {
+		const response = await api.get(`/list/${id}`, {
+			headers: { "csrf-token": csrfToken },
+			withCredentials: true,
+		});
+
+		setModel({
+			name: response.data.name,
+			task: response.data.task,
+		});
+		console.log(model.name);
+	}
+
 	function backPage() {
 		navigate("/task");
 	}
@@ -130,25 +152,27 @@ export default function FormCadastro() {
 					<form onSubmit={handleSumibit} className="flex flex-col my-6">
 						<label className="font-medium text-white">Titulo:</label>
 						<input
-							onChange={(event: ChangeEvent<HTMLInputElement>) => {
-								updateModel(event);
-							}}
-							name="title"
+							value={model.name}
+							name="name"
 							type="text"
 							placeholder="Digite o nome"
 							className="w-full mb-5 p-2 rounded-md"
 							ref={nameRef}
+							onChange={(event: ChangeEvent<HTMLInputElement>) => {
+								updateModel(event);
+							}}
 						/>
 						<label className="font-medium text-white">Descrição:</label>
 						<textarea
-							name="description"
-							onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-								updateModel(event);
-							}}
+							name="task"
+							value={model.task}
 							rows={4}
 							className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 gap-3"
 							placeholder="Digite a tarefa"
 							ref={taskRef}
+							onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+								updateModel(event);
+							}}
 						></textarea>
 						<div className="flex items-center justify-center rounded-3 mt-4 ">
 							<button

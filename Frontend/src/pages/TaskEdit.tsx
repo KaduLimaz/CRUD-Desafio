@@ -4,6 +4,7 @@ import moment from "moment";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import { MdDone } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { LuFileSearch } from "react-icons/lu";
 
 interface TaskProps {
 	id: string;
@@ -134,6 +135,7 @@ export default function TaskForm() {
 
 								<td className="px-6 py-4 flex gap-2">
 									<button
+										name="delete"
 										className="bg-red-500 w-6 h-6 flex items-center justify-center rounded "
 										onClick={() => {
 											handleDelete(task.id);
@@ -143,6 +145,7 @@ export default function TaskForm() {
 									</button>
 
 									<button
+										name="confirm"
 										className="bg-green-500 w-6 h-6 flex items-center justify-center rounded "
 										onClick={() => {}}
 									>
@@ -150,10 +153,18 @@ export default function TaskForm() {
 									</button>
 
 									<button
+										name="edit"
 										className="bg-orange-300 w-6 h-6 flex items-center justify-center rounded"
 										onClick={() => editTask(task.id)}
 									>
 										<FiEdit size={18} color="#fff" />
+									</button>
+									<button
+										name="edit"
+										className=" w-6 h-6 flex items-center justify-center rounded"
+										onClick={() => editTask(task.id)}
+									>
+										<LuFileSearch size={18} color="#fff" />
 									</button>
 								</td>
 							</tr>
