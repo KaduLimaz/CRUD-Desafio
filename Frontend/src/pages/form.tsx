@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, ChangeEvent, FormEvent } from "react";
 import { api } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface TaskProps {
 	id?: string;
-	title: string;
-	description: string;
+	title?: string;
+	description?: string;
 	status?: boolean;
 	created_at?: string;
 	update_at?: Date;
@@ -16,6 +16,11 @@ export default function FormCadastro() {
 	const nameRef = useRef<HTMLInputElement | null>(null);
 	const taskRef = useRef<HTMLTextAreaElement | null>(null);
 	const navigate = useNavigate();
+	const { id } = useParams();
+
+	useEffect(() => {
+		console.log(id);
+	}, [id]);
 
 	function updateModel(
 		event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -28,8 +33,6 @@ export default function FormCadastro() {
 
 	//token
 	useEffect(() => {
-		console.log("chamou");
-
 		if (!csrfToken) getToken();
 	}, []);
 
@@ -38,10 +41,6 @@ export default function FormCadastro() {
 			loadTasks();
 		}
 	}, [csrfToken]);
-
-	// useEffect(() => {
-	// 	loadTasks();
-	// }, []);
 
 	//pega o token
 	async function getToken() {
@@ -75,13 +74,13 @@ export default function FormCadastro() {
 			{
 				headers: { "csrf-token": csrfToken },
 				withCredentials: true,
-            }
-            
+			}
 		);
 		console.log(response);
 		nameRef.current?.value;
 	}
 
+	
 	function backPage() {
 		navigate("/task");
 	}

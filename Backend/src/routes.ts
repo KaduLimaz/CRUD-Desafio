@@ -32,14 +32,14 @@ export async function routes(
 		},
 	});
 
-	fastify.get(
-		"/teste",
-		async (request: FastifyRequest, reply: FastifyReply) => {
-			return {
-				ok: true,
-			};
-		}
-	);
+	// fastify.get(
+	// 	"/teste",
+	// 	async (request: FastifyRequest, reply: FastifyReply) => {
+	// 		return {
+	// 			ok: true,
+	// 		};
+	// 	}
+	// );
 
 	fastify.route({
 		method: "POST",
@@ -87,6 +87,17 @@ export async function routes(
 
 	fastify.route({
 		method: "PUT",
+		url: "/customer/:id",
+		onRequest: (request, reply, done) => {
+			fastify.csrfProtection(request, reply, done);
+		},
+		handler: async (request, reply) => {
+			return new UpdateCustomerController().handle(request, reply);
+		},
+	});
+
+	fastify.route({
+		method: "GET",
 		url: "/customer/:id",
 		onRequest: (request, reply, done) => {
 			fastify.csrfProtection(request, reply, done);

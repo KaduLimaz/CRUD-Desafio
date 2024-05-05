@@ -7,7 +7,7 @@ interface UpdateProps {
 
 export class UpdateCustomerService {
 	async execute({ id, task }: UpdateProps) {
-		if (!id || !task) {
+		if (!id ) {
 			throw new Error(
 				"ID do cliente e tarefa são obrigatórios para atualização"
 			);

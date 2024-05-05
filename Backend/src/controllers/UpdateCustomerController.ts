@@ -3,11 +3,21 @@ import { UpdateCustomerService } from "../services/UpdateCustomerService";
 
 export class UpdateCustomerController {
 	async handle(request: FastifyRequest, reply: FastifyReply) {
-		const { id, task } = request.body as { id: string; task: string };
+		try {
+			const { id } = request.params as { id: string };
+			const { task } = request.body as { task: string };
 
-		const customerServise = new UpdateCustomerService();
-		const updateCustomer = await customerServise.execute({ id, task });
+			const customerService = new UpdateCustomerService();
+			const updateCustomer = await customerService.execute({
+				id,
+				task,
+			});
 
-		reply.send(updateCustomer);
+			reply.send(updateCustomer);
+		} catch (error) {
+			reply.status(500).send({
+				error: "Erro ao atualizar cliente",
+			});
+		}
 	}
 }

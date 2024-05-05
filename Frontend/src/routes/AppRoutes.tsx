@@ -16,6 +16,10 @@ export const router = createBrowserRouter([
 		path: "/task_cadastro",
 		element: <TaskForm />,
 	},
+	{
+		path: "/task_cadastro/:id",
+		element: <TaskForm />,
+	},
 ]);
 
 export function AppRoutes() {

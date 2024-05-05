@@ -61,6 +61,26 @@ export default function TaskForm() {
 		navigate("/task_cadastro");
 	}
 
+	function editTask(id: string) {
+		navigate(`/task_cadastro/${id}`);
+	}
+
+	async function handleDelete(id: string) {
+		await api.delete("/customer", {
+			params: {
+				id: id,
+			},
+			headers: { "csrf-token": csrfToken },
+			withCredentials: true,
+		});
+
+		const allCustomers = Tasks.filter((customer) => {
+			return customer.id !== id;
+		});
+
+		setTasks(allCustomers);
+	}
+
 	return (
 		<>
 			<div className="w-full text-sm text-end">
@@ -115,7 +135,9 @@ export default function TaskForm() {
 								<td className="px-6 py-4 flex gap-2">
 									<button
 										className="bg-red-500 w-6 h-6 flex items-center justify-center rounded "
-										onClick={() => {}}
+										onClick={() => {
+											handleDelete(task.id);
+										}}
 									>
 										<FiTrash size={18} color="#fff" />
 									</button>
@@ -129,7 +151,7 @@ export default function TaskForm() {
 
 									<button
 										className="bg-orange-300 w-6 h-6 flex items-center justify-center rounded"
-										onClick={() => {}}
+										onClick={() => editTask(task.id)}
 									>
 										<FiEdit size={18} color="#fff" />
 									</button>
