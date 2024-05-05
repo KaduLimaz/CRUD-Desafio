@@ -73,19 +73,20 @@ export default function TaskForm() {
 				</button>
 			</div>
 
-			<div className="relative overflow-x-auto">
-				<table className="w-full text-sm text-center left rtl:text-right text-gray-500 dark:text-gray-400">
-					<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+				<table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+					<thead className="text-xs text-white uppercase bg-blue-600 border-b border-blue-400 dark:text-white">
 						<tr>
-							<th scope="col" className="px-6 py-3">
+							<th scope="col" className="px-6 py-3 bg-blue-500">
 								Titulo
 							</th>
 							<th scope="col" className="px-6 py-3">
 								Data de Atualização
 							</th>
-							<th scope="col" className="px-6 py-3">
+							<th scope="col" className="px-6 py-3 bg-blue-500">
 								Status
 							</th>
+
 							<th scope="col" className="px-6 py-3">
 								Ações
 							</th>
@@ -95,7 +96,7 @@ export default function TaskForm() {
 						{Tasks.map((task) => (
 							<tr
 								key={task.id}
-								className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+								className="bg-blue-600 border-b border-blue-400 hover:bg-blue-500"
 							>
 								<td className="px-6 py-4">{task.name}</td>
 								<td className="px-6 py-4">{formatDate(task.update_at)}</td>
@@ -110,7 +111,7 @@ export default function TaskForm() {
 										{task.status ? "Finalizado" : "Pendente"}
 									</span>
 								</td>
-								<td className="px-6 py-4">{task.task}</td>
+
 								<td className="px-6 py-4 flex gap-2">
 									<button
 										className="bg-red-500 w-6 h-6 flex items-center justify-center rounded "
