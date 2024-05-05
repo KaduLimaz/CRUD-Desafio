@@ -10,6 +10,7 @@ import { CreateCustomerController } from "./controllers/CreateCustomerController
 import { ListCustomerController } from "./controllers/ListCustomerController";
 import { DeleteCustomerController } from "./controllers/DeleteCustomerController";
 import { UpdateCustomerController } from "./controllers/UpdateCustomerController";
+import { FindListCustomerController } from "./controllers/FindListCustomerController";
 
 export async function routes(
 	fastify: FastifyInstance,
@@ -98,12 +99,12 @@ export async function routes(
 
 	fastify.route({
 		method: "GET",
-		url: "/customer/:id",
+		url: "/list/:id",
 		onRequest: (request, reply, done) => {
 			fastify.csrfProtection(request, reply, done);
 		},
 		handler: async (request, reply) => {
-			return new UpdateCustomerController().handle(request, reply);
+			return new FindListCustomerController().handle(request, reply);
 		},
 	});
 
