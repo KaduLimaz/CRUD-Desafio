@@ -7,7 +7,7 @@ import ToView from "../pages/ToView";
 export const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <TaskForm />,
+		element: <TaskEdit />,
 	},
 	{
 		path: "/task",
