@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useRef, ChangeEvent, FormEvent } from "react";
 import { api } from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -89,7 +90,7 @@ export default function FormCadastro() {
 
 		backPage();
 	}
-		
+
 	async function findTask(id: string) {
 		const response = await api.get(`/list/${id}`, {
 			headers: { "csrf-token": csrfToken },
