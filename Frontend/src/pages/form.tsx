@@ -24,11 +24,11 @@ export default function FormCadastro() {
 		});
 	}
 
-	//token
+	//se nao tiver o token ele gera
 	useEffect(() => {
 		if (!csrfToken) getToken();
 	}, []);
-
+	//token gerado, atualiza
 	useEffect(() => {
 		if (csrfToken) {
 			loadTasks();
@@ -57,7 +57,7 @@ export default function FormCadastro() {
 		});
 		setModel(response.data);
 	}
-
+	// faz o cadastro e atualiza
 	async function handleSumibit(event: FormEvent) {
 		event.preventDefault();
 		if (id !== undefined) {
@@ -89,7 +89,7 @@ export default function FormCadastro() {
 
 		backPage();
 	}
-
+		
 	async function findTask(id: string) {
 		const response = await api.get(`/list/${id}`, {
 			headers: { "csrf-token": csrfToken },
@@ -121,7 +121,9 @@ export default function FormCadastro() {
 			<div className="w-full min-h-screen bg-blue-600 flex justify-center px-4">
 				<main className="my-10 w-full md:max-w-2xl">
 					<div className="flex justify-center  text-white">
-						<h1 className="text-4xl ">Cadastro Tarefa</h1>
+						<h1 className="text-4xl ">
+							{id !== undefined ? "Editar Tarefa" : "Cadastrar Tarefa"}
+						</h1>
 					</div>
 					<form onSubmit={handleSumibit} className="flex flex-col my-6">
 						<label className="font-medium text-white">Titulo:</label>
