@@ -106,32 +106,6 @@ export default function FormCadastro() {
 	function backPage() {
 		navigate("/task");
 	}
-	// async function onSubmit(event: ChangeEvent<HTMLFormElement>) {
-	// 	event.preventDefault();
-
-	// 	const response = await api.post("/customer", model, {
-	// 		headers: { "csrf-token": csrfToken },
-	// 		withCredentials: true,
-	// 	});
-
-	// 	setModel((currentValue) => [...currentValue, response.data]);
-
-	// 	// if (!nameRef.current?.value || !taskRef.current?.value) return;
-
-	// 	// const response = await api.post(
-	// 	// 	"/customer",
-	// 	// 	{
-	// 	// 		name: nameRef.current?.value,
-	// 	// 		task: taskRef.current?.value,
-	// 	// 	},
-	// 	// 	{
-	// 	// 		headers: { "csrf-token": csrfToken },
-	// 	// 		withCredentials: true,
-	// 	// 	}
-	// 	// );
-
-	// 	console.log(response);
-	// }
 
 	return (
 		<>

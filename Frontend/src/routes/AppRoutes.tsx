@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "../pages/Home";
 import TaskEdit from "../pages/TaskEdit";
 import TaskForm from "../pages/form";
+import ToView from "../pages/ToView";
 
 export const router = createBrowserRouter([
 	{
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
 	{
 		path: "/task_cadastro/:id",
 		element: <TaskForm />,
+	},
+	{
+		path: "/task/:id",
+		element: <ToView />,
 	},
 ]);
 
