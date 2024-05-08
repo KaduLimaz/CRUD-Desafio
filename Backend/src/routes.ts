@@ -11,6 +11,7 @@ import { ListCustomerController } from "./controllers/ListCustomerController";
 import { DeleteCustomerController } from "./controllers/DeleteCustomerController";
 import { UpdateCustomerController } from "./controllers/UpdateCustomerController";
 import { FindListCustomerController } from "./controllers/FindListCustomerController";
+import { log } from "console";
 
 export async function routes(
 	fastify: FastifyInstance,
@@ -33,14 +34,14 @@ export async function routes(
 		},
 	});
 
-	// fastify.get(
-	// 	"/teste",
-	// 	async (request: FastifyRequest, reply: FastifyReply) => {
-	// 		return {
-	// 			ok: true,
-	// 		};
-	// 	}
-	// );
+	fastify.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
+		console.log(request.body);
+
+		return {
+			ok: true,
+			body: "teste",
+		};
+	});
 
 	fastify.route({
 		method: "POST",
@@ -107,11 +108,4 @@ export async function routes(
 			return new FindListCustomerController().handle(request, reply);
 		},
 	});
-
-	// fastify.put(
-	// 	"/customer/:id",
-	// 	async (request: FastifyRequest, reply: FastifyReply) => {
-	// 		return new UpdateCustomerController().handle(request, reply);
-	// 	}
-	// );
 }

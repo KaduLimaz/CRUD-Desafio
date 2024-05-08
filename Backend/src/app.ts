@@ -4,6 +4,7 @@ import { routes } from "./routes";
 import fastifyCsrf from "@fastify/csrf-protection";
 import fastifyCookie from "@fastify/cookie";
 
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3333;
 const app = fastify({ logger: true });
 
 app.setErrorHandler((error, request, reply) => {
@@ -23,8 +24,11 @@ const start = async () => {
 	});
 
 	try {
-		await app.listen({ port: 3333 });
+		await app.listen({ port: 3333, host: "0.0.0.0" });
+		console.log(`Server listening at http://0.0.0.0:${PORT}`);
 	} catch (error) {
+		console.log(error);
+
 		process.exit(1);
 	}
 };
