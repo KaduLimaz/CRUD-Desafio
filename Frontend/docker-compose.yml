@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: .  # Caminho para a pasta do frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "8080:8080"
+    networks:
+      - aplicacao-network
+    
+
+networks:
+  aplicacao-network:
+    name: "aplicacao-network"
+    driver: bridge

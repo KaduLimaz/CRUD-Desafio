@@ -4,7 +4,7 @@ import {
 	FastifyRequest,
 	FastifyReply,
 } from "fastify";
-
+import cors from "@fastify/cors";
 import { request } from "http";
 import { CreateCustomerController } from "./controllers/CreateCustomerController";
 import { ListCustomerController } from "./controllers/ListCustomerController";
@@ -19,6 +19,7 @@ export async function routes(
 ) {
 	//vai gerar o token
 	fastify.get("/token", async (req, reply) => {
+		reply.header("Access-Control-Allow-Origin", "http://localhost:8080");
 		const token = await reply.generateCsrf();
 		return { token };
 	});
@@ -57,24 +58,13 @@ export async function routes(
 	fastify.route({
 		method: "GET",
 		url: "/list",
-		onRequest: (request, reply, done) => {
-			fastify.csrfProtection(request, reply, done);
-		},
+		// onRequest: (request, reply, done) => {
+		// 	fastify.csrfProtection(request, reply, done);
+		// },
 		handler: async (request, reply) => {
 			return new ListCustomerController().handle(request, reply);
 		},
 	});
-
-	// fastify.post(
-	// 	"/customer",
-	// 	async (request: FastifyRequest, reply: FastifyReply) => {
-	// 		return new CreateCustomerController().handle(request, reply);
-	// 	}
-	// );
-
-	// fastify.get("/list", async (request: FastifyRequest, reply: FastifyReply) => {
-	// 	return new ListCustomerController().handle(request, reply);
-	// });
 
 	fastify.route({
 		method: "DELETE",

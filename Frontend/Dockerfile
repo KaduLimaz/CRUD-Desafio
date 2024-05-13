@@ -12,7 +12,7 @@ COPY . .
 RUN npm i
 
 # Expõe a porta na qual a API estará escutando
-EXPOSE 3333
+EXPOSE 8080
 
 # Comando para iniciar a aplicação quando o contêiner for iniciado
 CMD ["npm", "run", "dev"]
