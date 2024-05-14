@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import TaskEdit from "../pages/TaskEdit";
-import TaskForm from "../pages/form";
+import TaskForm from "../pages/TaskForm";
 import ToView from "../pages/ToView";
 
 export const router = createBrowserRouter([

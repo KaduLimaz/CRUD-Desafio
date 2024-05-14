@@ -14,17 +14,21 @@ interface TaskProps {
 	created_at: string;
 	update_at: Date;
 }
-export default function TaskForm() {
+
+//exibir e gerenciar a lista de tarefas
+export default function TaskEdit() {
 	const [Tasks, setTasks] = useState<TaskProps[]>([]);
 	const [csrfToken, setCsrfToken] = useState<string>();
 	const navigate = useNavigate();
 
-	//token
+	//Obtém o token CSRF ao montar o componente.
 	useEffect(() => {
 		console.log("chamou");
 
 		if (!csrfToken) getToken();
 	}, []);
+
+	// Carrega as tarefas quando o token CSRF é obtido.
 
 	useEffect(() => {
 		if (csrfToken) {
@@ -32,11 +36,13 @@ export default function TaskForm() {
 		}
 	}, [csrfToken]);
 
+	// Carrega as tarefas ao montar o componente.
+
 	useEffect(() => {
 		loadTasks();
 	}, []);
 
-	//pega o token
+	//Obtém um token CSRF do servidor.
 	async function getToken() {
 		const response = await api.get("/token", { withCredentials: true });
 
@@ -44,6 +50,8 @@ export default function TaskForm() {
 
 		setCsrfToken(response.data.token);
 	}
+
+	// Carrega as tarefas do servidor.
 
 	async function loadTasks() {
 		const response = await api.get("/list", {
@@ -53,21 +61,40 @@ export default function TaskForm() {
 		setTasks(response.data);
 		console.log(response.data);
 	}
+	//Formata uma data para exibição.
 
 	function formatDate(date: Date) {
 		return moment(date).format("DD/MM/YYYY");
 	}
 
+	//Navega para a página de cadastro de nova tarefa.
+
 	function newTask() {
 		navigate("/task_cadastro");
 	}
 
+	/**
+	 * Navega para a página de edição de uma tarefa.
+	 * @param id ID da tarefa a ser editada.
+	 */
+
 	function editTask(id: string) {
 		navigate(`/task_cadastro/${id}`);
 	}
+
+	/**
+	 * Navega para a página de visualização de uma tarefa.
+	 * @param id ID da tarefa a ser visualizada.
+	 */
+
 	function viewTask(id: string) {
 		navigate(`/task/${id}`);
 	}
+
+	/**
+	 * Manipula a exclusão de uma tarefa.
+	 * @param id ID da tarefa a ser excluída.
+	 */
 
 	async function handleDelete(id: string) {
 		await api.delete("/customer", {

@@ -8,7 +8,9 @@ interface TaskProps {
 	task: string;
 }
 
-export default function FormCadastro() {
+//Componente para o formulário de cadastro de tarefas.
+
+export default function TaskForm() {
 	const [model, setModel] = useState<TaskProps>({ name: "", task: "" });
 	const [csrfToken, setCsrfToken] = useState<string>();
 	const nameRef = useRef<HTMLInputElement | null>(null);
@@ -25,24 +27,25 @@ export default function FormCadastro() {
 		});
 	}
 
-	//se nao tiver o token ele gera
+	//Se não houver um token CSRF, obtém um.
 	useEffect(() => {
 		if (!csrfToken) getToken();
 	}, []);
-	//token gerado, atualiza
+	//Quando o token CSRF for gerado, carrega as tarefas.
 	useEffect(() => {
 		if (csrfToken) {
 			loadTasks();
 		}
 	}, [csrfToken]);
 
+	//Ao montar o componente ou quando o ID da tarefa for alterado, busca a tarefa correspondente.
 	useEffect(() => {
 		if (id !== undefined) {
 			findTask(id);
 		}
 	}, [id, csrfToken]);
 
-	//pega o token
+	//Obtém um token CSRF do servidor.
 	async function getToken() {
 		const response = await api.get("/token", { withCredentials: true });
 
@@ -51,6 +54,8 @@ export default function FormCadastro() {
 		setCsrfToken(response.data.token);
 	}
 
+	//Carrega as tarefas do servidor.
+
 	async function loadTasks() {
 		const response = await api.get("/list", {
 			headers: { "csrf-token": csrfToken },
@@ -58,10 +63,13 @@ export default function FormCadastro() {
 		});
 		setModel(response.data);
 	}
-	// faz o cadastro e atualiza
+
+	// Manipula o envio do formulário, criando ou atualizando a tarefa conforme necessário.
+
 	async function handleSumibit(event: FormEvent) {
 		event.preventDefault();
 		if (id !== undefined) {
+			// Atualiza a tarefa existente.
 			const response = await api.put(
 				`/customer/${id}`,
 				model,
@@ -74,6 +82,7 @@ export default function FormCadastro() {
 
 			window.alert("Tarefa atualizada com sucesso");
 		} else {
+			// Cria uma nova tarefa.
 			const response = await api.post(
 				"/customer",
 				{
@@ -90,6 +99,7 @@ export default function FormCadastro() {
 
 		backPage();
 	}
+	//Busca uma tarefa pelo ID.
 
 	async function findTask(id: string) {
 		const response = await api.get(`/list/${id}`, {
@@ -103,6 +113,8 @@ export default function FormCadastro() {
 		});
 		console.log(model.name);
 	}
+
+	//Navega de volta para a página de tarefas.
 
 	function backPage() {
 		navigate("/task");
